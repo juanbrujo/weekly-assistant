@@ -1,6 +1,6 @@
-var path	= require('path');
-var pkg 	= require(path.join(__dirname, './package.json'));
-var fs 		= require('fs');
+var path			= require('path');
+var pkg 			= require(path.join(__dirname, './package.json'));
+var fs 				= require('fs');
 var inquirer 	= require('inquirer');
 var program 	= require('commander');
 var request 	= require('request');
