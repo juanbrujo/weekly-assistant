@@ -1,6 +1,6 @@
-var path			= require('path');
-var pkg 			= require(path.join(__dirname, './package.json'));
-var fs 				= require('fs');
+var path	= require('path');
+var pkg 	= require(path.join(__dirname, './package.json'));
+var fs 		= require('fs');
 var inquirer 	= require('inquirer');
 var program 	= require('commander');
 var request 	= require('request');
@@ -10,7 +10,7 @@ var webshotOptions = {
 	encoding: 'binary',
 	renderDelay: 1000
 };
-var sites 		= require('./20160303/sites.js');
+var sites 	= require('./20160303/sites.js');
 
 program
 	.version( pkg.version )
