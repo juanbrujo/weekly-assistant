@@ -1,10 +1,12 @@
 # CSSLab Weekly Assistant
 
-**NodeJS robot that helps me to build CSSLab's weekly newsletter**
+**NodeJS robot that helps me to build CSSLab's Weekly newsletter**
+
+![](https://media.giphy.com/media/FsCMq6RYX4ySk/giphy.gif)
 
 > under development
 
-This NodeJS script (by now) helps me to build the [CSSLab Weekly Newsletter](http://www.csslab.cl/csslab-weekly/) that takes me at least 2 hors of my time. 
+This NodeJS script (by now) helps me to build the [CSSLab Weekly newsletter](http://www.csslab.cl/csslab-weekly/) that takes me at least 2 hours of my weekly time. 
 
 So I'm automating some things and some of them is being added to this 🤖 Assistant.
 
@@ -12,7 +14,7 @@ So I'm automating some things and some of them is being added to this 🤖 Assis
 
 ### TO-DO:
 
-- ask for new directory and use it to save new files (inquirer)
+- ask for new directory and use it to save new files ([inquirer](https://www.npmjs.com/package/inquirer))
 - better callbacks.
 
 ### LICENSE:

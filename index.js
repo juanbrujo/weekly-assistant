@@ -24,17 +24,25 @@ program
  * return string
  */
 var cleanName = function( url ){
+
  return url.split('/')[2];
+
 }
 
 
 /**
- * 
+ * getScreenshot( sitename );
+ * @sitename: string | clean name of site 
+ *
+ * get and save a screenshot of each site
+ *
  */
 function getScreenshot( sitename ){
+
 	webshot(sitename, './20160303/' + sitename + '.png', webshotOptions, function(err) {
 	  console.log(sitename + ' screenshot OK!');
 	});
+
 }
 
 
@@ -77,12 +85,18 @@ function getContent( sitename ){
  *
  */
 function writeToFile( content, sitename ) {
+
 	fs.writeFile('./20160303/' + sitename + '.md', content, function(err) {
+
     if(err) {
+
        return console.log(err);
+
     }
+
     console.log('The file ' + sitename + ' was created!');
-	}); 
+	});
+
 }
 
 
@@ -109,7 +123,9 @@ function parseSites( array, callback ){
 
 	// callback
   if (callback && typeof(callback) === "function") {
+
     callback.apply();
+    
   }
 
 }
