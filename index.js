@@ -1,9 +1,8 @@
-
-var path 			= require('path');
+var path			= require('path');
 var pkg 			= require(path.join(__dirname, './package.json'));
-var fs      	= require('fs');
+var fs 				= require('fs');
 var inquirer 	= require('inquirer');
-var program   = require('commander');
+var program 	= require('commander');
 var request 	= require('request');
 var cheerio 	= require('cheerio');
 var webshot 	= require('webshot');
@@ -14,8 +13,8 @@ var webshotOptions = {
 var sites 		= require('./20160303/sites.js');
 
 program
-  .version( pkg.version )
-  .parse( process.argv );
+	.version( pkg.version )
+	.parse( process.argv );
 
 
 /**
@@ -25,7 +24,7 @@ program
  */
 var cleanName = function( url ){
 
- return url.split('/')[2];
+	return url.split('/')[2];
 
 }
 
@@ -64,7 +63,7 @@ function getContent( sitename ){
 
 			var $ = cheerio.load(html);
 
-     	title = $("title").text();
+			title = $("title").text();
 			description = $('meta[name="description"]').attr('content');
 
 			writeToFile( title + ' | ' +  description, cleanName( sitename ) );
@@ -88,13 +87,14 @@ function writeToFile( content, sitename ) {
 
 	fs.writeFile('./20160303/' + sitename + '.md', content, function(err) {
 
-    if(err) {
+		if(err) {
 
-       return console.log(err);
+			return console.log(err);
 
-    }
+		}
 
-    console.log('The file ' + sitename + ' was created!');
+		console.log('The file ' + sitename + ' was created!');
+
 	});
 
 }
@@ -122,11 +122,11 @@ function parseSites( array, callback ){
 	});
 
 	// callback
-  if (callback && typeof(callback) === "function") {
+	if (callback && typeof(callback) === "function") {
 
-    callback.apply();
-    
-  }
+		callback.apply();
+
+	}
 
 }
 
