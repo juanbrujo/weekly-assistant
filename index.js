@@ -1,3 +1,5 @@
+var async			= require('async');
+var url				= require('url');
 var path			= require('path');
 var pkg 			= require(path.join(__dirname, './package.json'));
 var fs 				= require('fs');
@@ -6,11 +8,7 @@ var program 	= require('commander');
 var request 	= require('request');
 var cheerio 	= require('cheerio');
 var webshot 	= require('webshot');
-var webshotOptions = {
-	encoding: 'binary',
-	renderDelay: 1000
-};
-var sites 	= require('./20160303/sites.js');
+var sites 		= require('./20160303/sites.js');
 
 program
 	.version( pkg.version )
@@ -18,28 +16,36 @@ program
 
 
 /**
- * cleanName( url );
- * @url: string | url
+ * cleanName( uri );
+ * @uri: string | uri
  * return string
  */
-var cleanName = function( url ){
+var cleanName = function( uri ){
 
-	return url.split('/')[2];
+	return url.parse(uri).hostname;
 
 }
 
 
 /**
  * getScreenshot( sitename );
- * @sitename: string | clean name of site 
+ * @sitename: string | clean name of site
+ * @callback: function | callback
+ * return callback
  *
  * get and save a screenshot of each site
  *
  */
-function getScreenshot( sitename ){
+function getScreenshot( sitename, callback ){
+
+	var webshotOptions = {
+		encoding: 'binary',
+		renderDelay: 1000
+	};
 
 	webshot(sitename, './20160303/' + sitename + '.png', webshotOptions, function(err) {
-	  console.log(sitename + ' screenshot OK!');
+		if (err) return callback(err);
+	  callback(null, sitename + ' screenshot OK!');
 	});
 
 }
@@ -47,28 +53,28 @@ function getScreenshot( sitename ){
 
 /**
  * getContent( sitename );
- * @sitename: string | clean name of site 
+ * @sitename: string | clean name of site
+ * @callback: function | callback
+ * return callback
  *
  * scrape title & descripcion of each site
  *
  */
-function getContent( sitename ){
+function getContent( sitename, callback ){
 
 	var title = '';
 	var description = '';
 
 	request(sitename, function(error, response, html) {
 
-		if (!error && response.statusCode == 200) {
+		if (error || response.statusCode !== 200) return callback(error || new Error('Not found'));
 
-			var $ = cheerio.load(html);
+		var $ = cheerio.load(html);
 
-			title = $("title").text();
-			description = $('meta[name="description"]').attr('content');
+		title = $("title").text();
+		description = $('meta[name="description"]').attr('content');
 
-			writeToFile( title + ' | ' +  description, cleanName( sitename ) );
-
-		}
+		callback(null, title + ' | ' +  description, cleanName( sitename ));
 
 	});
 
@@ -78,63 +84,81 @@ function getContent( sitename ){
 /**
  * writeToFile( @params );
  * @content: string | content scraped
- * @sitename: string | clean name of site 
+ * @sitename: string | clean name of site
+ * @callback: function | callback
+ * return callback
  *
  * saves content to file for each site
  *
  */
-function writeToFile( content, sitename ) {
+function writeToFile( content, sitename, cb ) {
 
 	fs.writeFile('./20160303/' + sitename + '.md', content, function(err) {
 
-		if(err) {
-
-			return console.log(err);
-
-		}
-
-		console.log('The file ' + sitename + ' was created!');
+		if (err) return cb(err);
+		cb(null, 'The file ' + sitename + ' was created!');
 
 	});
 
 }
 
+/**
+ * getContentAndWriteToFile( @params );
+ *
+ * @uri: string | uri
+ * @callback: function | callback
+ * return callback
+ *
+ */
+function getContentAndWriteToFile( uri, callback ) {
+	async.waterfall([
+		async.apply(getContent, uri),
+		writeToFile
+	], callback);
+}
+
+/**
+ * parseUrl( @params );
+ *
+ * @uri: string | uri
+ * @callback: function | callback
+ * return callback
+ *
+ */
+function parseUrl(uri, callback) {
+	async.parallel([
+		// take screenshot
+		async.apply(getScreenshot, cleanName(uri)),
+		// get content & save to file
+		async.apply(getContentAndWriteToFile, uri),
+	], callback);
+}
 
 /**
  * parseSites( @params );
  *
- * @array: array | of site url's
+ * @sites: array | of site url's
  * @callback: function | callback
+ * return callback
  *
  */
-function parseSites( array, callback ){
-
-	array.forEach(function(value, index){
-
-		var sitename = cleanName( value );
-
-		// take screenshot
-		getScreenshot( sitename );
-
-		// get content & save to file
-		getContent( value )
-
-	});
-
-	// callback
-	if (callback && typeof(callback) === "function") {
-
-		callback.apply();
-
-	}
-
+function parseSites(sites, callback) {
+	async.map(sites, parseUrl, callback);
 }
 
 
 /**
  * APPLY
  */
-parseSites(sites, function(){
+parseSites(sites, function(err, results){
+	if (err) return console.error(err);
+
+	results.forEach(function(result) {
+		result.forEach(function(log) {
+			console.log(log);
+		});
+	});
 	console.log('Everything OK');
+
 });
 
