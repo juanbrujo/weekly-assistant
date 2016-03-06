@@ -4,6 +4,7 @@
   "description": "CSSLab Weekly Assistant",
   "main": "index.js",
   "scripts": {
+    "start": "node .",
     "test": "test.js"
   },
   "author": "Jorge Epuñan <juanbrujo@gmail.com> (http://www.csslab.cl)",
