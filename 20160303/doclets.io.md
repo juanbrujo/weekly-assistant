@@ -1,1 +1,1 @@
-Docletsdoclets | JSDoc goes CI. Automated API-Doc generation for Javascript
+Docletsdoclets | The easiest way to publish JSDoc Javascript documentation. The new home for API-Docs.
