@@ -43,9 +43,9 @@ function getScreenshot( sitename, callback ){
 		renderDelay: 1000
 	};
 
-	webshot(sitename, './20160303/' + sitename + '.png', webshotOptions, function(err) {
+	webshot(sitename, './20160303/' + cleanName( sitename ) + '.png', webshotOptions, function(err) {
 		if (err) return callback(err);
-	  callback(null, sitename + ' screenshot OK!');
+	  callback(null, '📸  · ' + sitename + ' screenshot OK!');
 	});
 
 }
@@ -96,7 +96,7 @@ function writeToFile( content, sitename, cb ) {
 	fs.writeFile('./20160303/' + sitename + '.md', content, function(err) {
 
 		if (err) return cb(err);
-		cb(null, 'The file ' + sitename + ' was created!');
+		cb(null, '📂 · The file ' + sitename + '.md was created!');
 
 	});
 
@@ -111,10 +111,14 @@ function writeToFile( content, sitename, cb ) {
  *
  */
 function getContentAndWriteToFile( uri, callback ) {
+
 	async.waterfall([
+
 		async.apply(getContent, uri),
 		writeToFile
+
 	], callback);
+
 }
 
 /**
@@ -126,12 +130,16 @@ function getContentAndWriteToFile( uri, callback ) {
  *
  */
 function parseUrl(uri, callback) {
+
 	async.parallel([
+
 		// take screenshot
-		async.apply(getScreenshot, cleanName(uri)),
+		async.apply(getScreenshot, uri),
 		// get content & save to file
-		async.apply(getContentAndWriteToFile, uri),
+		async.apply(getContentAndWriteToFile, uri)
+
 	], callback);
+
 }
 
 /**
@@ -143,7 +151,9 @@ function parseUrl(uri, callback) {
  *
  */
 function parseSites(sites, callback) {
+
 	async.map(sites, parseUrl, callback);
+
 }
 
 
@@ -151,6 +161,7 @@ function parseSites(sites, callback) {
  * APPLY
  */
 parseSites(sites, function(err, results){
+
 	if (err) return console.error(err);
 
 	results.forEach(function(result) {
@@ -158,6 +169,7 @@ parseSites(sites, function(err, results){
 			console.log(log);
 		});
 	});
+
 	console.log('Everything OK');
 
 });

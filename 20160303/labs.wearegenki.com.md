@@ -1,1 +1,0 @@
-Simple Weather App | A simple experiment using AngularJS, the OpenWeatherMap API, and CSS3.
