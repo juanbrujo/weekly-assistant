@@ -1,14 +1,15 @@
-var async			= require('async');
-var url				= require('url');
-var path			= require('path');
-var pkg 			= require(path.join(__dirname, './package.json'));
-var fs 				= require('fs');
-var inquirer 	= require('inquirer');
-var program 	= require('commander');
-var request 	= require('request');
-var cheerio 	= require('cheerio');
-var webshot 	= require('webshot');
-var sites 		= require('./20160303/sites.js');
+var async		= require('async');
+var url			= require('url');
+var path		= require('path');
+var pkg			= require(path.join(__dirname, './package.json'));
+var fs			= require('fs');
+var inquirer	= require('inquirer');
+var program		= require('commander');
+var request		= require('request');
+var cheerio		= require('cheerio');
+var webshot		= require('webshot');
+var sluggin		= require('Sluggin').Sluggin;
+var sites		= require('./20160324/sites.js');
 
 program
 	.version( pkg.version )
@@ -22,7 +23,7 @@ program
  */
 var cleanName = function( uri ){
 
-	return url.parse(uri).hostname;
+	return sluggin( url.parse(uri).href.replace('www.','').split('//')[1] );
 
 }
 
@@ -43,9 +44,9 @@ function getScreenshot( sitename, callback ){
 		renderDelay: 1000
 	};
 
-	webshot(sitename, './20160303/' + cleanName( sitename ) + '.png', webshotOptions, function(err) {
+	webshot(sitename, './20160324/' + cleanName( sitename ) + '.png', webshotOptions, function(err) {
 		if (err) return callback(err);
-	  callback(null, '📸  · ' + sitename + ' screenshot OK!');
+		callback(null, '📸  · ' + sitename + ' screenshot OK!');
 	});
 
 }
@@ -57,7 +58,7 @@ function getScreenshot( sitename, callback ){
  * @callback: function | callback
  * return callback
  *
- * scrape title & descripcion of each site
+ * scrape title & description for each site
  *
  */
 function getContent( sitename, callback ){
@@ -74,7 +75,7 @@ function getContent( sitename, callback ){
 		title = $("title").text();
 		description = $('meta[name="description"]').attr('content');
 
-		callback(null, title + ' | ' +  description, cleanName( sitename ));
+		callback(null, title + ' | ' +  description, sitename);
 
 	});
 
@@ -93,10 +94,10 @@ function getContent( sitename, callback ){
  */
 function writeToFile( content, sitename, cb ) {
 
-	fs.writeFile('./20160303/' + sitename + '.md', content, function(err) {
+	fs.writeFile('./20160324/' + cleanName( sitename ) + '.md', content, function(err) {
 
 		if (err) return cb(err);
-		cb(null, '📂 · The file ' + sitename + '.md was created!');
+		cb(null, '📂 · The file ' + cleanName( sitename ) + '.md was created!');
 
 	});
 
