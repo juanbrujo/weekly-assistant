@@ -16,15 +16,21 @@ program
 	.parse( process.argv );
 
 
+function listDirectory(path){
+	return fs.readdirSync( path ).filter( function (file) {
+    return fs.statSync( path + '/' + file ).isDirectory();
+  });
+}
+// console.log( listDirectory('./') );
+
+
 /**
  * cleanName( uri );
  * @uri: string | uri
  * return string
  */
 var cleanName = function( uri ){
-
 	return sluggin( url.parse(uri).href.replace('www.','').split('//')[1] );
-
 }
 
 
@@ -160,7 +166,7 @@ function parseSites(sites, callback) {
 
 /**
  * APPLY
- */
+
 parseSites(sites, function(err, results){
 
 	if (err) return console.error(err);
@@ -174,4 +180,4 @@ parseSites(sites, function(err, results){
 	console.log('Everything OK');
 
 });
-
+ */
