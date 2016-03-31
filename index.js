@@ -9,7 +9,8 @@ var request		= require('request');
 var cheerio		= require('cheerio');
 var webshot		= require('webshot');
 var sluggin		= require('Sluggin').Sluggin;
-var sites		= require('./20160324/sites.js');
+var directory 	= './20160330/';
+var sites		= require(directory + 'sites.js');
 
 program
 	.version( pkg.version )
@@ -44,7 +45,7 @@ function getScreenshot( sitename, callback ){
 		renderDelay: 1000
 	};
 
-	webshot(sitename, './20160324/' + cleanName( sitename ) + '.png', webshotOptions, function(err) {
+	webshot(sitename, directory + cleanName( sitename ) + '.png', webshotOptions, function(err) {
 		if (err) return callback(err);
 		callback(null, '📸  · ' + sitename + ' screenshot OK!');
 	});
@@ -94,7 +95,7 @@ function getContent( sitename, callback ){
  */
 function writeToFile( content, sitename, cb ) {
 
-	fs.writeFile('./20160324/' + cleanName( sitename ) + '.md', content, function(err) {
+	fs.writeFile(directory + cleanName( sitename ) + '.md', content, function(err) {
 
 		if (err) return cb(err);
 		cb(null, '📂 · The file ' + cleanName( sitename ) + '.md was created!');
