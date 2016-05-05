@@ -9,7 +9,7 @@ var request		= require('request');
 var cheerio		= require('cheerio');
 var webshot		= require('webshot');
 var sluggin		= require('Sluggin').Sluggin;
-var directory 	= './20160330/';
+var directory 	= './20160505/';
 var sites		= require(directory + 'sites.js');
 
 program
@@ -47,6 +47,8 @@ function getScreenshot( sitename, callback ){
 
 	webshot(sitename, directory + cleanName( sitename ) + '.png', webshotOptions, function(err) {
 		if (err) return callback(err);
+
+		console.log('Getting screenshot: ' + sitename);
 		callback(null, '📸  · ' + sitename + ' screenshot OK!');
 	});
 
@@ -76,7 +78,8 @@ function getContent( sitename, callback ){
 		title = $("title").text();
 		description = $('meta[name="description"]').attr('content');
 
-		callback(null, title + ' | ' +  description, sitename);
+		console.log('Getting content: ' + sitename);
+		callback(null, title + ' | ' +  description + ' | ' + sitename, sitename);
 
 	});
 
@@ -93,12 +96,12 @@ function getContent( sitename, callback ){
  * saves content to file for each site
  *
  */
-function writeToFile( content, sitename, cb ) {
+function writeToFile( content, sitename, callback ) {
 
 	fs.writeFile(directory + cleanName( sitename ) + '.md', content, function(err) {
 
-		if (err) return cb(err);
-		cb(null, '📂 · The file ' + cleanName( sitename ) + '.md was created!');
+		if (err) return callback(err);
+		callback(null, '📂 · The file ' + cleanName( sitename ) + '.md was created!');
 
 	});
 
@@ -131,7 +134,7 @@ function getContentAndWriteToFile( uri, callback ) {
  * return callback
  *
  */
-function parseUrl(uri, callback) {
+function parseUrl( uri, callback ) {
 
 	async.parallel([
 
@@ -152,7 +155,7 @@ function parseUrl(uri, callback) {
  * return callback
  *
  */
-function parseSites(sites, callback) {
+function parseSites( sites, callback ) {
 
 	async.map(sites, parseUrl, callback);
 
@@ -162,7 +165,7 @@ function parseSites(sites, callback) {
 /**
  * APPLY
  */
-parseSites(sites, function(err, results){
+parseSites(sites, function( err, results ){
 
 	if (err) return console.error(err);
 
