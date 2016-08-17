@@ -1,16 +1,16 @@
-var async		= require('async');
-var url			= require('url');
-var path		= require('path');
-var pkg			= require(path.join(__dirname, './package.json'));
-var fs			= require('fs');
+var async			= require('async');
+var url				= require('url');
+var path			= require('path');
+var pkg				= require(path.join(__dirname, './package.json'));
+var fs				= require('fs');
 var inquirer	= require('inquirer');
 var program		= require('commander');
 var request		= require('request');
 var cheerio		= require('cheerio');
 var webshot		= require('webshot');
 var sluggin		= require('Sluggin').Sluggin;
-var directory 	= './20160505/';
-var sites		= require(directory + 'sites.js');
+var directory = './20160818/';
+var sites			= require(directory + 'sites.js');
 
 program
 	.version( pkg.version )
@@ -68,6 +68,8 @@ function getContent( sitename, callback ){
 
 	var title = '';
 	var description = '';
+	var basicFormat = '';
+	var fullFormat = '';
 
 	request(sitename, function(error, response, html) {
 
@@ -77,9 +79,15 @@ function getContent( sitename, callback ){
 
 		title = $("title").text();
 		description = $('meta[name="description"]').attr('content');
+		basicFormat = 'Title: ' + title + '\n\nDescription: ' +  description + '\n\nURL: ' +  sitename + '\n\n';
 
-		console.log('Getting content: ' + sitename);
-		callback(null, title + ' | ' +  description + ' | ' + sitename, sitename);
+		if (sitename.match('buscandriu')) {
+			fullFormat = 'Buscandriu: <li style="text-align: left;">' + title + ' <a href="' +  sitename + '" target="_blank"><strong>[link]</strong></a></li>';
+		} else {
+			fullFormat = 'Full format: <a href="' + sitename + '" target="_blank"><strong>' + title + '</strong></a>: ' +  description + ' <a href="' + sitename + '" target="_blank"><strong>[link]</strong></a><br /><br />';
+		}
+
+		callback(null, basicFormat + fullFormat, sitename);
 
 	});
 
