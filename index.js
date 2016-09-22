@@ -9,7 +9,7 @@ var request		= require('request');
 var cheerio		= require('cheerio');
 var webshot		= require('webshot');
 var sluggin		= require('Sluggin').Sluggin;
-var directory = './20160818/';
+var directory = './20160922/';
 var sites			= require(directory + 'sites.js');
 
 program
@@ -23,9 +23,7 @@ program
  * return string
  */
 var cleanName = function( uri ){
-
 	return sluggin( url.parse(uri).href.replace('www.','').split('//')[1] );
-
 }
 
 
@@ -45,12 +43,17 @@ function getScreenshot( sitename, callback ){
 		renderDelay: 1000
 	};
 
-	webshot(sitename, directory + cleanName( sitename ) + '.png', webshotOptions, function(err) {
-		if (err) return callback(err);
+	if (!sitename.match('buscandriu')) { // exclude screenshots from buscandriu.cl uri's
 
-		console.log('Getting screenshot: ' + sitename);
-		callback(null, '📸  · ' + sitename + ' screenshot OK!');
-	});
+		webshot(sitename, directory + cleanName( sitename ) + '.png', webshotOptions, function(err) {
+			if (err) return callback(err);
+
+			console.log('Getting screenshot: ' + sitename);
+			callback(null, '📸  · ' + sitename + ' screenshot OK!');
+		});
+
+	}
+
 
 }
 
@@ -66,10 +69,10 @@ function getScreenshot( sitename, callback ){
  */
 function getContent( sitename, callback ){
 
-	var title = '';
+	var title 			= '';
 	var description = '';
 	var basicFormat = '';
-	var fullFormat = '';
+	var fullFormat 	= '';
 
 	request(sitename, function(error, response, html) {
 
@@ -82,7 +85,7 @@ function getContent( sitename, callback ){
 		basicFormat = 'Title: ' + title + '\n\nDescription: ' +  description + '\n\nURL: ' +  sitename + '\n\n';
 
 		if (sitename.match('buscandriu')) {
-			fullFormat = 'Buscandriu: <li style="text-align: left;">' + title + ' <a href="' +  sitename + '" target="_blank"><strong>[link]</strong></a></li>';
+			fullFormat = 'Buscandriu: <li style="text-align: left;">' + title.split('|')[0] + ' <a href="' +  sitename + '" target="_blank"><strong>[link]</strong></a></li>';
 		} else {
 			fullFormat = 'Full format: <a href="' + sitename + '" target="_blank"><strong>' + title + '</strong></a>: ' +  description + ' <a href="' + sitename + '" target="_blank"><strong>[link]</strong></a><br /><br />';
 		}
@@ -107,8 +110,8 @@ function getContent( sitename, callback ){
 function writeToFile( content, sitename, callback ) {
 
 	fs.writeFile(directory + cleanName( sitename ) + '.md', content, function(err) {
-
 		if (err) return callback(err);
+		console.log('Writing ' + cleanName( sitename ) + '.md');
 		callback(null, '📂 · The file ' + cleanName( sitename ) + '.md was created!');
 
 	});
