@@ -26,7 +26,7 @@ Clone the repository and install dependencies:
 
 ```bash
 $ git clone https://github.com/yourusername/csslab-weekly-assistant.git
-$ cd csslab-weekly-assistant
+$ cd weekly-assistant
 $ npm install
 ```
 
