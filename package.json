@@ -9,6 +9,9 @@
   },
   "author": "Jorge Epuñan <juanbrujo@gmail.com> (http://www.csslab.cl)",
   "license": "MIT",
+  "engines": {
+    "node": "6.17.1"
+  },
   "dependencies": {
     "async": "^1.5.2",
     "cheerio": "^0.20.0",
