@@ -1,11 +1,13 @@
 {
   "name": "@juanbrujo/csslab-weekly",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "CSSLab Weekly Assistant",
   "main": "index.js",
   "scripts": {
     "start": "node .",
-    "test": "test.js"
+    "test": "mocha test/**/*.test.js --timeout 5000",
+    "test:watch": "mocha test/**/*.test.js --watch --timeout 5000",
+    "test:coverage": "nyc mocha test/**/*.test.js --timeout 5000"
   },
   "author": "Jorge Epuñan <juanbrujo@gmail.com> (http://www.csslab.cl)",
   "license": "MIT",
@@ -17,9 +19,16 @@
     "cheerio": "^0.20.0",
     "commander": "^2.9.0",
     "fs": "0.0.2",
+    "gm": "^1.23.1",
     "inquirer": "^0.12.0",
     "request": "^2.69.0",
     "sluggin": "^0.1.1",
     "webshot": "^0.18.0"
+  },
+  "devDependencies": {
+    "mocha": "^3.5.3",
+    "nyc": "^11.9.0",
+    "rimraf": "^2.6.3",
+    "sinon": "^4.5.0"
   }
 }

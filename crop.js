@@ -6,7 +6,7 @@
  * SInior monthly newsletter
  * 
  * @author Jorge Epuñan <juanbrujo@gmail.com>
- * @version 1.1.0
+ * @version 1.1.1
  * @requires gm - npm install gm@1.23.1
  * @requires request - npm install request
  * @requires cheerio - npm install cheerio

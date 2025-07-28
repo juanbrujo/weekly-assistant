@@ -70,7 +70,7 @@ function getScreenshot(sitename, callback) {
 		}
 	};
 
-	var filename = path.join(directory, cleanName(sitename) + ".png");
+	var filename = path.join(directory, cleanName(sitename) + ".jpg");
 	console.log("📸 Taking screenshot: " + sitename);
 
 	webshot(sitename, filename, webshotOptions, function(err) {

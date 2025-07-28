@@ -12,6 +12,7 @@ This Node.js script automates tasks to generate the [CSSLab Weekly newsletter](h
 
 ## Features
 
+- **v1.1.1**: Tests added.
 - **v1.1.0**: Added `crop.js` image cropping tool with smart background-image detection, comprehensive documentation, and enhanced filename generation.
 - **v1.0.0**: Better docs, comments and cleaner ES5 code.
 - **v0.0.2**: Improved callbacks and resolved screenshot URL bugs.
